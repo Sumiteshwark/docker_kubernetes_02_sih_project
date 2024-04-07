@@ -33,3 +33,11 @@
 -> We also have to change the mongoURL in node application (ie 'mongodb://rebooters:sk1234@mongodb:27017/sih?authSource=admin) and again rebuild the image and start the node container.
 -> Its not best practice to directly add username and password in url, instead we can put this in .env file in node application and pass this while running node image.
    (ie docker run --name sih-backend -e MONGODB_USERNAME=rebooters -e MONGODB_PASSWORD=sk1234 --rm -d -p 8000:8000 --network sih-net sih-node) , before this add these two Variables in Dockerfile
+
+
+
+## Other problem is if we change anything in application code then we again have to build the image and run the container to get the latest update.
+-> For this we can add volume to this 
+   (ie docker run --name sih-backend -v <absolute_path_of_main_file:/app -v /app/node_modules --rm -d -p 8000:8000 --network sih-net sih-node>)
+   (ie docker run --name sih-backend -v /home/rebooters/Desktop/sih_docker/SIH_backend-main:/app -v /app/node_modules --rm -d -p 8000:8000 --network sih-net sih-node)
+-> This will update if changes done but we also have to add nodemon to restart the server.So add nodemon in devdependincies and "dev": "nodemon server.js" in scripts in package.json and RUN ["npm", "run", "dev"] in Dockerfile.
