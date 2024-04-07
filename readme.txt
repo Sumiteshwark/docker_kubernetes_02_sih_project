@@ -38,6 +38,33 @@
 
 ## Other problem is if we change anything in application code then we again have to build the image and run the container to get the latest update.
 -> For this we can add volume to this 
-   (ie docker run --name sih-backend -v <absolute_path_of_main_file:/app -v /app/node_modules --rm -d -p 8000:8000 --network sih-net sih-node>)
-   (ie docker run --name sih-backend -v /home/rebooters/Desktop/sih_docker/SIH_backend-main:/app -v /app/node_modules --rm -d -p 8000:8000 --network sih-net sih-node)
--> This will update if changes done but we also have to add nodemon to restart the server.So add nodemon in devdependincies and "dev": "nodemon server.js" in scripts in package.json and RUN ["npm", "run", "dev"] in Dockerfile.
+
+1> For backend
+   *(ie docker run --name sih-backend -e MONGODB_USERNAME=rebooters -e MONGODB_PASSWORD=sk1234 -v <absolute_path_of_main_file:/app -v /app/node_modules --rm -d -p 8000:8000 --network sih-net sih-node>)
+   *(ie docker run --name sih-backend -e MONGODB_USERNAME=rebooters -e MONGODB_PASSWORD=sk1234 -v /home/rebooters/Desktop/sih_docker/SIH_backend-main:/app -v /app/node_modules --rm -d -p 8000:8000 --network sih-net sih-node)
+   *This will update if changes done but we also have to add nodemon to restart the server.So add nodemon in devdependincies and "dev": "nodemon server.js" in scripts in package.json and RUN ["npm", "run", "dev"] in Dockerfile.
+
+2> For frontend
+	*(docker run -v <absolute_path_of_main_file>:/app/src --name sih-frontend --rm -p 3000:3000 -it sih-react)
+	*(docker run -v /home/rebooters/Desktop/sih_docker/SIH_frontend-main/src:/app/src  --name sih-frontend --rm -p 3000:3000 -it sih-react) (Here wo donot need to add anonymous volume for node_modules but react is configured automatically.)
+	* Now changes directly applied if application code is updated.
+
+
+
+************ Final Command to run ************
+1> For database(ie mongodb)
+	-> docker run --name mongodb -v data:/data/db --rm -d --network sih-net -e MONGO_INITDB_ROOT_USERNAME=rebooters -e MONGO_INITDB_ROOT_PASSWORD=sk1234 mongo
+2> For frontend(ie for react)
+	-> docker build -t sih-react .
+    -> docker run -v /home/rebooters/Desktop/sih_docker/SIH_frontend-main/src:/app/src  --name sih-frontend --rm -p 3000:3000 -it sih-react
+3> For backend(ie node/express)
+	-> docker buile -t sih-node .
+	-> docker run --name sih-backend -e MONGODB_USERNAME=rebooters -e MONGODB_PASSWORD=sk1234 -v /home/rebooters/Desktop/sih_docker/SIH_backend-main:/app -v /app/node_modules --rm -d -p 8000:8000 --network sih-net sih-node
+*** To see details (docker logs <CONTAINER_NAME>)
+
+
+************** Features **************
+-> connection between react to node to mongodb
+-> If mongodb container is deleted data will still exists bcz of named volume (-v data:/data/db)
+-> React app also added with bind volume and from this code will be updated automatically if changes occurs.(prevents in building image and running container again and again while changes done)
+-> For node bind volume is also implemented for automatically code update and also for authentication by adding username and password.
