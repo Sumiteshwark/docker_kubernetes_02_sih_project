@@ -1,4 +1,4 @@
-************* Containers and Networks ********************** -> From Lecture 57 to 74
+************* Containers and Networks ********************** -> From Lecture 57 to 77
 
 -> In this we are going to create three containers, one for react, one for node and one for mongodb.
 
@@ -31,3 +31,5 @@
 -> This can be done by adding MONGO_INITDB_ROOT_USERNAME and MONGO_INITDB_ROOT_PASSWORD in Environment Variables
 	(ie docker run --name mongodb -v data:/data/db --rm -d --network sih-net -e MONGO_INITDB_ROOT_USERNAME=rebooters -e MONGO_INITDB_ROOT_PASSWORD=sk1234 mongo)
 -> We also have to change the mongoURL in node application (ie 'mongodb://rebooters:sk1234@mongodb:27017/sih?authSource=admin) and again rebuild the image and start the node container.
+-> Its not best practice to directly add username and password in url, instead we can put this in .env file in node application and pass this while running node image.
+   (ie docker run --name sih-backend -e MONGODB_USERNAME=rebooters -e MONGODB_PASSWORD=sk1234 --rm -d -p 8000:8000 --network sih-net sih-node) , before this add these two Variables in Dockerfile
