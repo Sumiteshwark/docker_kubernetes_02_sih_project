@@ -1,0 +1,54 @@
+version: '3.8'
+services:
+  mongodb:
+    image: "mongo"
+    volumes:
+      - data:/data/db
+    # container_name: mongodb   # We can assign container name like this
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: rebooters
+    #   MONGO_INITDB_ROOT_PASSWORD: sk1234
+    #   # - MONGO_INITDB_ROOT_PASSWORD=sk1234  (can be written like this also)
+    env_file:
+      - ./env/mongo.env
+    # networks: (this can be written like this but we have no need because all containers in same compose file will be in same network by default) 
+    #   - sih-net
+
+
+  backend:
+    # build: 
+    #   context: ./SIH_backend-main
+    #   dockerfile: Dockerfile
+    #   args:
+    #     some-args: 1
+    build: ./SIH_backend-main
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./SIH_backend-main:/app
+      - /app/node_modules
+    # container_name: backend
+    # environment: #(Not a good way to write in compose file because it is not a good practice)
+    #   MONGODB_USERNAME: rebooters
+    #   MONGODB_PASSWORD: sk1234
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - mongodb
+
+
+  frontend:
+    build: ./SIH_frontend-main
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./SIH_frontend-main/src:/app/src
+    # container_name: frontend
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+
+
+volumes:
+  data:
