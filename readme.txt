@@ -1,4 +1,4 @@
-************* Containers and Networks ********************** -> From Lecture 57 to 77
+************* Containers and Networks ********************** -> From Lecture 57 to 77 (till line no. 70)
 
 -> In this we are going to create three containers, one for react, one for node and one for mongodb.
 
@@ -55,10 +55,10 @@
 1> For database(ie mongodb)
 	-> docker run --name mongodb -v data:/data/db --rm -d --network sih-net -e MONGO_INITDB_ROOT_USERNAME=rebooters -e MONGO_INITDB_ROOT_PASSWORD=sk1234 mongo
 2> For frontend(ie for react)
-	-> docker build -t sih-react .
+	-> docker build -t sih-react . (run inside SIH_frontend_main folder)
     -> docker run -v /home/rebooters/Desktop/sih_docker/SIH_frontend-main/src:/app/src  --name sih-frontend --rm -p 3000:3000 -it sih-react
 3> For backend(ie node/express)
-	-> docker buile -t sih-node .
+	-> docker buile -t sih-node . (run inside SIH_backend_main folder)
 	-> docker run --name sih-backend -e MONGODB_USERNAME=rebooters -e MONGODB_PASSWORD=sk1234 -v /home/rebooters/Desktop/sih_docker/SIH_backend-main:/app -v /app/node_modules --rm -d -p 8000:8000 --network sih-net sih-node
 *** To see details (docker logs <CONTAINER_NAME>)
 
@@ -68,3 +68,7 @@
 -> If mongodb container is deleted data will still exists bcz of named volume (-v data:/data/db)
 -> React app also added with bind volume and from this code will be updated automatically if changes occurs.(prevents in building image and running container again and again while changes done)
 -> For node bind volume is also implemented for automatically code update and also for authentication by adding username and password.
+
+
+
+
