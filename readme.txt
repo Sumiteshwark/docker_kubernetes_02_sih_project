@@ -70,7 +70,7 @@
 
 
 
-*************** DOCKER COMPOSE ************** (From Lecture 78 to )
+*************** DOCKER COMPOSE ************** (From Lecture 78 to 86)
 # To run compose file
 	1> docker-compose up (In root folder to run in attach mode)
 	2> docker-compose up -d (To run in detached mode)
